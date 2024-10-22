@@ -1,52 +1,42 @@
-# Print header information
-print("\n*********************************\n")
-print("Gasoline Branch\n")
-
-# Import required modules
-import random  # Used to randomly choose gas level and gas station
-from time import sleep  # Used to introduce delays in the program
-
+import random
+from time import sleep
 
 # Function to randomly select a gas level from a list
 def gasLevelGauge():
-    gasLevelList = ["Empty", "Low", "Quarter Tank", "Half Tank", "Three Quarter Tank", "Full Tank"]
-    return random.choice(gasLevelList)  # Randomly return one of the gas levels
-
+    return random.choice(["Empty", "Low", "Quarter Tank", "Half Tank", "Three Quarter Tank", "Full Tank"])
 
 # Function to randomly select a gas station from a list
 def gasStations():
-    gasStationsList = ["VP", "Shell", "Meijer", "Sams Club", "Marathon", "Mobile", "Speedway", "Circle K"]
-    return random.choice(gasStationsList)  # Randomly return one of the gas stations
+    return random.choice(["VP", "Shell", "Meijer", "Sams Club", "Marathon", "Mobile", "Speedway", "Circle K"])
 
-
-# Function to provide alerts based on the current gas level
+# Function to handle alerts based on gas level
 def gasLevelAlert():
-    # Generate random distances to the nearest gas station for "Low" and "Quarter Tank"
-    milesToGasStationLow = round(random.uniform(1, 25), 1)  # Distance for Low gas level (1 to 25 miles)
-    milesToGasStationQuarterTank = round(random.uniform(25.1, 50), 1)  # Distance for Quarter Tank (25.1 to 50 miles)
+    gasLevel = gasLevelGauge()  # Get current gas level
+    print(f"\nGas level: {gasLevel}")
 
-    gasLevelIndicator = gasLevelGauge()  # Get current gas level
+    # Dict for messages and distances based on gas level
+    messages = {
+        "Empty": ("***WARNING - YOU ARE ON EMPTY***\n", "Calling Triple AAA"),
+        "Low": ("Your gas tank is extremely low, checking GPS for the closest gas station\n",
+                f"The closest gas station is {gasStations()} which is {round(random.uniform(1, 25), 1)} miles away."),
+        "Quarter Tank": ("Your gas tank is on a quarter of a tank, checking GPS for the closest gas station\n",
+                         f"The closest gas station is {gasStations()} which is {round(random.uniform(25.1, 50), 1)} miles away."),
+        "Half Tank": "Your gas tank is half full, which is plenty to get to your destination.",
+        "Three Quarter Tank": "Your gas tank is three-quarters full.",
+        "Full Tank": "Your gas tank is full!!!"
+    }
 
-    # Check the gas level and provide corresponding alerts
-    if gasLevelIndicator == "Empty":
-        print("***WARNING - YOU ARE ON EMPTY***\n")
-        sleep(1.5)  # Wait for 1.5 seconds before the next message
-        print("Calling Triple AAA")  # Simulate calling for roadside assistance
-    elif gasLevelIndicator == "Low":
-        print("Your gas tank is extremely low, checking GPS for the closest gas station\n")
+    # Retrieve and print the corresponding messages based on gas level
+    if gasLevel == "Empty":
+        print(messages[gasLevel][0])
         sleep(1.5)
-        print("The closest gas station is", gasStations(), "which is", milesToGasStationLow, "miles away.")
-    elif gasLevelIndicator == "Quarter Tank":
-        print("Your gas tank is on a quarter of a tank, checking GPS for the closest gas station\n")
+        print(messages[gasLevel][1])
+    elif gasLevel in ["Low", "Quarter Tank"]:
+        print(messages[gasLevel][0])
         sleep(1.5)
-        print("The closest gas station is", gasStations(), "which is", milesToGasStationQuarterTank, "miles away.")
-    elif gasLevelIndicator == "Half Tank":
-        print("Your gas tank is a half a tank full which is plenty to get to your destination.")
-    elif gasLevelIndicator == "Three Quarter Tank":
-        print("Your gas tank is three quarter tanks full.")
+        print(messages[gasLevel][1])
     else:
-        print("Your gas tank is full!!!")
+        print(messages[gasLevel])
 
-
-# Call the gasLevelAlert function to run the program
+# Call the function to display the gas level alert
 gasLevelAlert()
